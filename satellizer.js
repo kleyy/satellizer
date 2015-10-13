@@ -687,16 +687,20 @@
           var deferred = $q.defer();
 
           window.onmessage = function (e) {
-            var queryParams = e.data.queryParams.substring(1).replace(/\/$/, '');
-            var hashParams = e.data.hashParams.substring(1).replace(/\/$/, '');
-            var hash = utils.parseQueryString(hashParams);
-            var qs = utils.parseQueryString(queryParams);
-            angular.extend(qs, hash);
-            if (!qs.error) {
-              deferred.resolve(qs);
+            console.log('received!!!', e.data.queryParams.constructor == "".constructor, e.data.hashParams.constructor == "".constructor)
+            if(e.data.queryParams.constructor == "".constructor && e.data.hashParams.constructor == "".constructor) {
+              var queryParams = e.data.queryParams.substring(1).replace(/\/$/, '');
+              var hashParams = e.data.hashParams.substring(1).replace(/\/$/, '');
+              var hash = utils.parseQueryString(hashParams);
+              var qs = utils.parseQueryString(queryParams);
+              angular.extend(qs, hash);
+              if (!qs.error) {
+                deferred.resolve(qs);
+              }
+              Popup.popupWindow.close();
+              window.onmessage = null;
+              $interval.cancel(polling);
             }
-            Popup.popupWindow.close();
-            $interval.cancel(polling);
           }
 
           var polling = $interval(function() {
@@ -717,7 +721,7 @@
                 }
 
                 Popup.popupWindow.close();
-
+                window.onmessage = null;
                 $interval.cancel(polling);
               }
             } catch (error) {
@@ -726,6 +730,7 @@
 
             if (!Popup.popupWindow || Popup.popupWindow.closed || Popup.popupWindow.closed === undefined) {
               $interval.cancel(polling);
+              window.onmessage = null;
               deferred.reject({});
             }
           }, 50);
