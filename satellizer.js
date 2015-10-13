@@ -687,8 +687,8 @@
           var deferred = $q.defer();
 
           window.onmessage = function (e) {
-            var queryParams = e.data.queryParams
-            var hashParams = e.data.hashParams
+            var queryParams = e.data.queryParams.substring(1).replace(/\/$/, '');
+            var hashParams = e.data.hashParams.substring(1).replace(/\/$/, '');
             var hash = utils.parseQueryString(hashParams);
             var qs = utils.parseQueryString(queryParams);
             angular.extend(qs, hash);
