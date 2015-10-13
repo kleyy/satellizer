@@ -687,7 +687,6 @@
           var deferred = $q.defer();
 
           window.onmessage = function (e) {
-            console.log('received!!!', e.data.queryParams.constructor == "".constructor, e.data.hashParams.constructor == "".constructor)
             if(e.data.queryParams.constructor == "".constructor && e.data.hashParams.constructor == "".constructor) {
               var queryParams = e.data.queryParams.substring(1).replace(/\/$/, '');
               var hashParams = e.data.hashParams.substring(1).replace(/\/$/, '');
